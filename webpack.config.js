@@ -1,7 +1,15 @@
+// [定数] webpack の出力オプションを指定します
+// 'production' か 'development' を指定
+const MODE = 'development';
+
+// ソースマップの利用有無(productionのときはソースマップを利用しない)
+const enabledSourceMap = (MODE === 'development');
+
+
 module.exports = {
   // モード値を production に設定すると最適化された状態で、
   // development に設定するとソースマップ有効でJSファイルが出力される
-  mode: 'development',
+  mode: MODE,
 
   // メインとなるJavaScriptファイル（エントリーポイント）
   entry: `./src/index.js`,
@@ -19,5 +27,24 @@ module.exports = {
   devServer: {
     contentBase: 'dist',
     open: true
+  },
+
+  module: {
+    rules: [
+      {
+        test: /\.css/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              url: false,
+              minimize: true,
+              sourceMap: enabledSourceMap,
+            }
+          },
+        ],
+      },
+    ]
   }
 };
